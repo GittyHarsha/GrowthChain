@@ -75,12 +75,47 @@ export function addProjectSlot(name, month, year) {
 }
 export function getProject(name) {
   let data = getData();
+  if(data.goals.lastDate)
   return data[name];
+
 }
 export function getProjectSlot(name, month, year) {
   let slot = getDate(month, year);
   let data = getData();
   return data[name][slot];
+}
+
+export function getLatestProjectSlot(name) {
+  let date = dayjs();
+  let month = date.month();
+  let year = date.year();
+  let projectSlot = getProjectSlot(name, month, year);
+  if(!projectSlot) {
+    addProjectSlot(name, month, year);
+    return getProjectSlot(name, month, year);
+  }
+  else {
+    let lastDate = dayjs(projectSlot.goals.lastDate, 'DD-MM-YYYY');
+    if(lastDate.diff(date, 'day')==0) {
+      return projectSlot;
+    }
+    else if(lastDate.diff(date, 'day')>=1) {
+      projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
+      projectSlot.goals.dailyGoals = [];
+      setProjectSlot(projectSlot);
+      return projectSlot;
+    }
+    else if(lastDate.diff(date, 'month')>=1) {
+      projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
+      projectSlot.goals.dailyGoals = [];
+      projectSlot.goals.monthlyGoals= [];
+      setProjectSlot(projectSlot);
+      return projectSlot;
+    }
+    else {
+      return projectSlot;
+    }
+  }
 }
 export function deleteProject(name) {
   let data = getData();
@@ -92,3 +127,4 @@ export function getProjects() {
   let data = getData();
   return Object.keys(data);
 }
+

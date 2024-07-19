@@ -3,13 +3,14 @@ import DailyGoals from "./DailyGoals";
 import MonthlyGoals from "./MonthlyGoals";
 import Progress from "./Progress";
 import { useSelector } from "react-redux";
-import {getProjectSlot, addProjectSlot} from '../../services/data_services';
+import {getProjectSlot, getLatestProjectSlot} from '../../services/data_services';
 import DateDropdown from '../../components/DateDropdown';
 import store from '../../redux/store';
-import dayjs from 'dayjs';
 import setGlobalState from '../../services/global_state';
 export default function Project(name, month, year) {
   let projectName = useSelector((state) => state.project.name);
+  console.log("what is the state of the project inside Project.js: ", store.getState());
+  console.log("project name got by project feature: ", projectName);
   function update(name, month, year) {
     let projectSlot = getProjectSlot(name, month,year);
     if(!projectSlot) {
@@ -25,6 +26,7 @@ export default function Project(name, month, year) {
     let year = state.date.year;
     if(!update(state.project.name, month, year)) {
       resetCallback();
+      setGlobalState(getLatestProjectSlot(name));
     }
   
   }
@@ -33,6 +35,7 @@ export default function Project(name, month, year) {
     let month = state.date.month;
     if(!update(state.project.name, month, year)) {
       resetCallback();
+      setGlobalState(getLatestProjectSlot(name));
     }
   }
   if (projectName == "") {

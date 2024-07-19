@@ -1,5 +1,5 @@
 import List from '../components/List';
-import {addProject, getProjects, deleteProject, getProjectSlot, addProjectSlot} from '../services/data_services';
+import {addProject, getProjects, deleteProject, getLatestProjectSlot} from '../services/data_services';
 import {useState} from 'react';
 import {setProjectName} from '../redux/slices/projectSlice';
 import dayjs from 'dayjs';
@@ -36,6 +36,7 @@ export default function ProjectList() {
         return project;
     }
     function setProject(project) {
+        console.log("project that UI got: ", project);
        setGlobalState(project);
         
     }
@@ -49,16 +50,11 @@ export default function ProjectList() {
         setProjects(projects.filter((_, index) => index !== idx));
         if(currentProjectName ===projects[idx]) {
             dispatch(setProjectName({name: ""}));
+            alert("hmm");
         }
     }
     function onClickFunc(idx) {
-        let project = getProjectSlot(projects[idx], month, year);
-        if(!project) {
-            addProjectSlot(projects[idx], month, year);
-            setProject(getProjectSlot(projects[idx], month, year));
-        }
-        else
-        setProject(project);
+        setProject(getLatestProjectSlot(projects[idx], month, year));
     }
 
     return <List
