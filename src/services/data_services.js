@@ -52,7 +52,8 @@ export function setProjectSlot(project) {
   let slot = getDate(project.date.month, project.date.year);
   let data = getData();
   if (typeof data[project.project.name][slot] =='object') {
-    data[project.project.name][slot] = project;
+    data[project.project.name][slot] = {...project};
+    delete data[project.project.name][slot].project;
     setData(data);
   }
   else {
@@ -60,17 +61,23 @@ export function setProjectSlot(project) {
   }
 }
 export function addProject(project) {
-  let data = getData();
+  let data = {...getData()};
   let name = project.project.name;
   let slot = getDate(project.date.month, project.date.year);
   data[name] = {};
   data[name][slot] = project;
+  data[name][slot] = Object.fromEntries(
+    Object.entries(data[name][slot]).filter(([key]) => key !== 'project')
+  );
   setData(data);
 }
 export function addProjectSlot(name, month, year) {
-  let data = getData();
+  let data = {...getData()};
   let slot = getDate(month, year);
   data[name][slot] = createProjectSlot(name, month, year);
+  data[name][slot] = Object.fromEntries(
+    Object.entries(data[name][slot]).filter(([key]) => key !== 'project')
+  );
   setData(data);
 }
 export function getProject(name) {
@@ -82,6 +89,8 @@ export function getProject(name) {
 export function getProjectSlot(name, month, year) {
   let slot = getDate(month, year);
   let data = getData();
+  data[name][slot]['project']={};
+  data[name][slot]['project']['name']=name;
   return data[name][slot];
 }
 

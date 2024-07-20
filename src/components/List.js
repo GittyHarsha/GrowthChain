@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 export default function List(props) {
   let viewOnly = props.viewOnly;
   let items = props.items;
-  let onClickFunc = props.onClickFunc?props.onClickFunc: (e)=> {};
+  let onClickFunc = props.onClickFunc ? props.onClickFunc : (e) => {};
   let addItem = props.addItem;
   let deleteItem = props.deleteItem;
   let [focus, setFocus] = useState(-1);
@@ -12,26 +12,10 @@ export default function List(props) {
     <div className="rounded-lg shadow-md bg-yellow-400 border-b border-white-400 m-1 p-1 text-black">
       <center>
         <div className="text-lg font-bold">{listName}</div>
-      {props.listPrepare}
+        {props.listPrepare}
       </center>
       {viewOnly == false ? (
         <div className="flex">
-          <input
-            className="w-full m-1 rounded"
-            value={inputText}
-            onChange={(e) => {
-              setInputText(e.target.value);
-            }}
-            type="text"
-            onKeyDown={(e) => {
-              if (e.key == "Enter") {
-                addItem(inputText);
-                setInputText("");
-              }
-            }}
-            class="bg-white text-black-400 p-1 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-black-500 w-100"
-            placeeholder="Enter text here"
-          />
           <button
             onClick={(e) => {
               if (inputText) {
@@ -54,7 +38,31 @@ export default function List(props) {
                 d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-          </button>          <button style={{display: inputText.length>0? "block": "none"}} onClick={(e)=> {setInputText("")}}>X</button>
+          </button>
+          <input
+            className="w-[9vw] m-1 rounded"
+            value={inputText}
+            onChange={(e) => {
+              setInputText(e.target.value);
+            }}
+            type="text"
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                addItem(inputText);
+                setInputText("");
+              }
+            }}
+            class="bg-white text-black-400 p-1 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-black-500 w-100"
+            placeeholder="Enter text here"
+          />
+          <button
+            style={{ display: inputText.length > 0 ? "block" : "none" }}
+            onClick={(e) => {
+              setInputText("");
+            }}
+          >
+            X
+          </button>
         </div>
       ) : (
         <></>
@@ -71,7 +79,7 @@ export default function List(props) {
               setFocus(-1);
             }}
           >
-            <div 
+            <div className="w-50"
               onClick={(e) => {
                 onClickFunc(idx);
               }}
