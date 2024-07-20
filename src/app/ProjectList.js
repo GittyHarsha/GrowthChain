@@ -50,7 +50,6 @@ export default function ProjectList() {
         setProjects(projects.filter((_, index) => index !== idx));
         if(currentProjectName ===projects[idx]) {
             dispatch(setProjectName({name: ""}));
-            alert("hmm");
         }
     }
     function onClickFunc(idx) {

@@ -7,7 +7,6 @@ export const projectSlice = createSlice({
   reducers: {
     setProjectName: (state, action)=> {
         state.name = action.payload.name;
-        alert("project name set to " + state.name);
     }
   },
 })
