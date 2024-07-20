@@ -137,3 +137,16 @@ export function getProjects() {
   return Object.keys(data);
 }
 
+export function renameProject(oldName, newName) {
+  let data = getData();
+  if(data[newName]) {
+    return false;
+  }
+  else {
+    data[newName]={...data[oldName]};
+    delete data[oldName];
+    setData(data);
+    return true;
+  }
+
+}

@@ -9,7 +9,7 @@ export default function List(props) {
   let [inputText, setInputText] = useState("");
   let listName = props.listName ? props.listName : "";
   return (
-    <div className="rounded-lg shadow-md bg-yellow-400 border-b border-white-400 m-1 p-1 text-black">
+    <div className="rounded-lg shadow-md bg-yellow-400 border-b border-white-400 m-1 p-1 text-black h-100">
       <center>
         <div className="text-lg font-bold">{listName}</div>
         {props.listPrepare}
