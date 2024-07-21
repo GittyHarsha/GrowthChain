@@ -37,9 +37,7 @@ export default function ProjectList() {
         return project;
     }
     function setProject(project) {
-        console.log("project that UI got: ", project);
-       setGlobalState(project);
-        
+       setGlobalState(project);   
     }
         
     function addItem(item) {

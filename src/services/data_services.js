@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 function getDate(month, year) {
   return month + "/" + year;
 }
@@ -105,16 +107,17 @@ export function getLatestProjectSlot(name) {
   }
   else {
     let lastDate = dayjs(projectSlot.goals.lastDate, 'DD-MM-YYYY');
-    if(lastDate.diff(date, 'day')==0) {
+    console.log("last date: ", lastDate);
+    if(date.diff(lastDate, 'day')==0) {
       return projectSlot;
     }
-    else if(lastDate.diff(date, 'day')>=1) {
+    else if(date.diff(lastDate, 'day')>=1) {
       projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
       projectSlot.goals.dailyGoals = [];
       setProjectSlot(projectSlot);
       return projectSlot;
     }
-    else if(lastDate.diff(date, 'month')>=1) {
+    else if(date.diff(lastDate, 'month')>=1) {
       projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
       projectSlot.goals.dailyGoals = [];
       projectSlot.goals.monthlyGoals= [];
