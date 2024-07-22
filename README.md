@@ -1,2 +1,3 @@
 # GrowthChain
-![image](https://github.com/user-attachments/assets/f952ed6b-7688-4bac-81fb-e010f9893513)
+![image](https://github.com/user-attachments/assets/95fd3bab-d5cb-450a-b20f-6a5e8ac9a553)
+
