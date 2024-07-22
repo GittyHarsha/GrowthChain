@@ -4,6 +4,7 @@ import goalsReducer from './slices/goalsSlice';
 import progressReducer from './slices/progressSlice';
 import projectReducer from './slices/projectSlice';
 import project_subscriber from '../redux/subscribers/project_subscriber';
+
 const store = configureStore({
     reducer: {
         date: dateReducer,

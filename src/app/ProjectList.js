@@ -1,5 +1,5 @@
 import List from '../components/List';
-import {addProject, getProjects, deleteProject, getLatestProjectSlot, renameProject} from '../services/data_services';
+import {addProject, getProjects, deleteProject, getLatestProjectSlot, renameProject, getScoreColor} from '../services/data_services';
 import {useState} from 'react';
 import {setProjectName} from '../redux/slices/projectSlice';
 import dayjs from 'dayjs';
@@ -8,7 +8,6 @@ import EditableInput from '../components/EditableInput';
 import { useDispatch, useSelector } from 'react-redux';
 export default function ProjectList() {
     let [projects, setProjects] = useState(getProjects());
-
     let dispatch = useDispatch();
     let month = useSelector((state) =>state.date.month);
     if(!month) month = dayjs().month();
@@ -18,7 +17,7 @@ export default function ProjectList() {
     function newProject(name) {
         let project={
             project: {
-                name: name
+                name: name,
             },
             goals: {
                 dailyGoals:[],
@@ -69,7 +68,9 @@ export default function ProjectList() {
     function projectComponent(projectName, idx) {
         let setGreen = projectName == currentProjectName;
         return (
-            <div className="flex w-100 h-100 align-middle">
+            <div 
+            style={{border: `3px solid ${getScoreColor(projectName)}`}}
+            className="flex w-100 h-100 align-middle">
                 <svg 
                 onClick = {(e)=> {onClickFunc(idx);}}
                 className={`h-[25px] w-[25x] ${setGreen ? "bg-yellow-500" : "bg-white"} rounded-full`}
