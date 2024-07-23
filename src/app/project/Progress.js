@@ -6,19 +6,14 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 export default function Progress(props) {
   let progress = useSelector((state) => state.progress.progress);
+  let projectName = useSelector((state)=> state.project.name);
   let dispatch = useDispatch();
   let items = progress.map((item) => <div><h2 className="bg-white rounded font-bold font-sans">Day: {item.day}</h2><p>{item.value}</p></div>);
-  let [dayProgress, setDayProgress] = useState(progress.length>0? progress[progress.length-1]: {day: dayjs().date(), value: ""});
+  let [dayProgress, setDayProgress] = useState(progress[progress.length - 1]);
   useEffect(
     ()=> {
-      if(dayjs().date()-dayProgress.day>=1) {
-        let dispatchProgress = [...progress];
-        let dayProg = {day: dayjs().date, value: ""};
-        dispatchProgress.push(dayProg);
-        setDayProgress(dayProg);
-        dispatch(setProgress({progress: dispatchProgress}));
-      }
-    }, []
+      setDayProgress(progress[progress.length - 1]);
+    }, [projectName]
   );
   function onChangeHandler(event) {
     let val = event.target.value;

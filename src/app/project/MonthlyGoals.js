@@ -34,7 +34,7 @@ export default function MonthlyGoals(props) {
         dispatch(addGoal({goalType: 'monthlyGoal', goal: item}));
     }
     function deleteItem(item) {
-        dispatch(deleteGoal({goalType: 'monthlyGoal', goal: item}));
+        dispatch(deleteGoal({goalType: 'monthlyGoal', index: item}));
     }
    
     return <>

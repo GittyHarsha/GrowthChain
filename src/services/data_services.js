@@ -134,7 +134,7 @@ export function getLatestProjectSlot(name) {
     let lastDate = dayjs(projectSlot.goals.lastDate, 'DD-MM-YYYY');
     console.log("last date: ", lastDate);
     if(date.diff(lastDate, 'day')==0) {
-      return projectSlot;
+
     }
     else if(date.diff(lastDate, 'day')>=1) {
       projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
@@ -152,7 +152,7 @@ export function getLatestProjectSlot(name) {
       }
       projectSlot.goals.dailyGoals = [];
       setProjectSlot(projectSlot);
-      return projectSlot;
+      
     }
     else if(date.diff(lastDate, 'month')>=1) {
       projectSlot.goals.lastDate = date.format('DD-MM-YYYY');
@@ -173,11 +173,13 @@ export function getLatestProjectSlot(name) {
       projectSlot.goals.dailyGoals = [];
       projectSlot.goals.monthlyGoals= [];
       setProjectSlot(projectSlot);
-      return projectSlot;
     }
-    else {
-      return projectSlot;
+    let progress = projectSlot.progress.progress;
+    console.log("what is the progress: ", progress);
+    if(progress.length==0 || dayjs().date()-progress[progress.length-1].day >=1) {
+      progress.push({day: dayjs().date(), value: ''});
     }
+    return projectSlot;
   }
 }
 export function deleteProject(name) {

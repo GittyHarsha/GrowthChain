@@ -35,7 +35,7 @@ export default function DailyGoals(props) {
         dispatch(addGoal({goalType: 'dailyGoal', goal: item}));
     }
     function deleteItem(item) {
-        dispatch(deleteGoal({goalType: 'dailyGoal', goal: item}));
+        dispatch(deleteGoal({goalType: 'dailyGoal', index: item}));
     }
     
     
