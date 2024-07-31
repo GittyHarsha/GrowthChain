@@ -17,7 +17,7 @@ export default function GoalStatus({goal, onChange}) {
             Completed: 
           <input
             type="checkbox"
-            defaultChecked={goal.value}
+            checked={goal.value}
             onClick={(e) => {
               setCompleted(!completed);
               handleChange({goal: goal.goal, category: "Boolean", value: !completed });
