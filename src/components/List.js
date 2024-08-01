@@ -67,7 +67,9 @@ export default function List(props) {
       ) : (
         <></>
       )}
-      <ul>
+      <ul
+      style={{...props.style}}
+      >
         {items.map((item, idx) => (
           <li
             className="flex justify-between h-auto p-4 shadow-md transition duration-300 ease-in-out m-2 border-b border-white-400 text-black bg-yellow-100 rounded-lg"

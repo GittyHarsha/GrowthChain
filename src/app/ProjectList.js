@@ -87,6 +87,7 @@ export default function ProjectList() {
         );
     }
     return <List
+    style={{height: '82vh', width: 'auto', overflowY: 'scroll'}}
     listName={"Projects"}
     viewOnly={false}
     items={projects.map((project, idx)=> (projectComponent(project, idx)))}
