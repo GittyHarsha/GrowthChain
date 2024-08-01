@@ -2,13 +2,17 @@ import EndGoals from "./EndGoals";
 import DailyGoals from "./DailyGoals";
 import MonthlyGoals from "./MonthlyGoals";
 import Progress from "./Progress";
+import {useState, useEffect} from 'react';
 import { useSelector } from "react-redux";
 import {getProjectSlot, getLatestProjectSlot} from '../../services/data_services';
 import DateDropdown from '../../components/DateDropdown';
 import store from '../../redux/store';
 import setGlobalState from '../../services/global_state';
 export default function Project(name, month, year) {
+ 
   let projectName = useSelector((state) => state.project.name);
+  let projectMonth = useSelector((state) => state.date.month);
+  let projectYear = useSelector((state) => state.date.year);
   console.log("what is the state of the project inside Project.js: ", store.getState());
   console.log("project name got by project feature: ", projectName);
   function update(name, month, year) {
@@ -49,7 +53,7 @@ export default function Project(name, month, year) {
     <div className="h-100 w-100">
         <div className="h-100 w-100 flex justify-around items-center rounded bg-gray-100 mb-2 font-sans text-4xl font-bold text-black-100">
         <center>{projectName}</center>
-        <span><DateDropdown handleMonthClick={handleMonthClick} handleYearClick={handleYearClick}/></span>
+        <span><DateDropdown month={projectMonth} year={projectYear}handleMonthClick={handleMonthClick} handleYearClick={handleYearClick}/></span>
         </div>
      
       <div className="grid grid-cols-3 gap-4">

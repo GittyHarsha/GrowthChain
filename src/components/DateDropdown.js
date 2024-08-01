@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-const DateDropdown = (props) => {
+const DateDropdown = ({month, year, handleMonthClick, handleYearClick}) => {
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
   
   const years = Array.from({ length: 3 }, (_, i) => new Date().getFullYear() - i);
-
+  
+  
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(dayjs().month());
@@ -20,17 +21,21 @@ const DateDropdown = (props) => {
     setSelectedMonth(dayjs().month());
     setSelectedYear(dayjs().year());
   }
-  const handleMonthClick = (month) => {
+  const monthClickListener = (month) => {
     setSelectedMonth(months[month]);
     setIsMonthOpen(false);
-    props.handleMonthClick(month, reset);
+    handleMonthClick(month, reset);
   };
   
-  const handleYearClick = (year) => {
+  const yearClickListener = (year) => {
     setSelectedYear(year);
     setIsYearOpen(false);
-    props.handleYearClick(year, reset);
+    handleYearClick(year, reset);
   };
+
+  useEffect(
+    ()=> {setSelectedMonth(month); setSelectedYear(year);}, [month, year]
+  );
 
   return (
     <div className="space-y-4">
@@ -55,7 +60,7 @@ const DateDropdown = (props) => {
                 <button
                   key={index}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                  onClick={() => handleMonthClick(index)}
+                  onClick={() => monthClickListener(index)}
                 >
                   {month}
                 </button>
@@ -86,7 +91,7 @@ const DateDropdown = (props) => {
                 <button
                   key={index}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                  onClick={() => handleYearClick(year)}
+                  onClick={() => yearClickListener(year)}
                 >
                   {year}
                 </button>

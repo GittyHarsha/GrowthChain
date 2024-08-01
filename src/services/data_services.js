@@ -18,7 +18,7 @@ function createProjectSlot(name, month, year) {
       year: year,
     },
     progress: {
-      progress: [],
+      progress: [{day: dayjs().date(), value: ""}],
     },
     goals: {
       dailyGoals: [],
@@ -91,6 +91,7 @@ export function getProject(name) {
 export function getProjectSlot(name, month, year) {
   let slot = getDate(month, year);
   let data = getData();
+  if(!data[name][slot]) return null;
   data[name][slot]['project']={};
   data[name][slot]['project']['name']=name;
   return data[name][slot];
@@ -125,6 +126,7 @@ export function getLatestProjectSlot(name) {
   let month = date.month();
   let year = date.year();
   let projectSlot = getProjectSlot(name, month, year);
+
   if(!projectSlot) {
     addProjectSlot(name, month, year);
     return getProjectSlot(name, month, year);
