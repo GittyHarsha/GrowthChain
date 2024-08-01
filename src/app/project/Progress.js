@@ -36,6 +36,6 @@ export default function Progress(props) {
     
     <List 
     listPrepare={<textarea value={dayProgress.value} className="w-full p-1 " style={{border: '0px solid black'}} onChange={onChangeHandler}/>}
-    listName={"Progress"} viewOnly={true} items={items.slice(0, -1)} />
+    listName={"Progress"} viewOnly={true} items={items.slice(0, -1).reverse()} />
   </div>)
 }

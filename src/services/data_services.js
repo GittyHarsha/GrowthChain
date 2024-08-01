@@ -54,9 +54,14 @@ export function setProject(project, projectName) {
 export function setProjectSlot(project) {
   let slot = getDate(project.date.month, project.date.year);
   let data = getData();
-  if (typeof data[project.project.name][slot] =='object') {
-    data[project.project.name][slot] = {...project};
-    delete data[project.project.name][slot].project;
+  let projectName = project.project.name;
+  if (typeof data[projectName][slot] =='object') {
+    data[projectName][slot] = {...project};
+    console.log("inside set project Slot: ", project);
+    delete data[projectName][slot].project;
+    data[projectName][slot]['goals'] = {...project.goals};
+    data[projectName]['endGoals']={...project}.goals.endGoals;
+    delete data[projectName][slot]['goals']['endGoals'];
     setData(data);
   }
   else {
@@ -67,11 +72,15 @@ export function addProject(project) {
   let data = {...getData()};
   let name = project.project.name;
   let slot = getDate(project.date.month, project.date.year);
-  data[name] = {score: 1.0};
+  data[name] = {score: 1.0, endGoals:[]};
   data[name][slot] = project;
   data[name][slot] = Object.fromEntries(
     Object.entries(data[name][slot]).filter(([key]) => key !== 'project')
   );
+  data[name][slot]['goals'] = Object.fromEntries(
+    Object.entries(data[name][slot]['goals']).filter(([key]) => key !== 'endGoals')
+  );
+  console.log("project that we are adding: ", data[name]);
   setData(data);
 }
 export function addProjectSlot(name, month, year) {
@@ -80,6 +89,9 @@ export function addProjectSlot(name, month, year) {
   data[name][slot] = createProjectSlot(name, month, year);
   data[name][slot] = Object.fromEntries(
     Object.entries(data[name][slot]).filter(([key]) => key !== 'project')
+  );
+  data[name][slot]['goals'] = Object.fromEntries(
+    Object.entries(data[name][slot]['goals']).filter(([key]) => key !== 'endGoals')
   );
   setData(data);
 }
@@ -94,6 +106,8 @@ export function getProjectSlot(name, month, year) {
   if(!data[name][slot]) return null;
   data[name][slot]['project']={};
   data[name][slot]['project']['name']=name;
+  data[name][slot]['goals']['endGoals']=data[name]['endGoals'];
+  console.log("sending project slot: ", data[name][slot]);
   return data[name][slot];
 }
 
@@ -129,7 +143,15 @@ export function getLatestProjectSlot(name) {
 
   if(!projectSlot) {
     addProjectSlot(name, month, year);
-    return getProjectSlot(name, month, year);
+    let project = getProjectSlot(name, month, year);
+    let prevDate = dayjs().subtract(1, 'month');
+    let prevProjectSlot = getProjectSlot(name, prevDate.month(), prevDate.year());
+    if(prevProjectSlot) {
+      project.goals.endGoals = prevProjectSlot.goals.endGoals;
+    }
+    setProjectSlot(project);
+    return project;
+
   }
   else {
     let score = getScore(name);
