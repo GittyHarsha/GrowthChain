@@ -8,9 +8,9 @@ export default function EditableInput(props) {
     setInputValue(e.target.value);
   }
   return (
-    <div className="w-[8vw]">
+    <div className="w-[6vw]">
       <input
-        className="w-[8vw]"
+        className="w-[6vw]"
         ref={inputRef}
         value={inputValue}
         readOnly={isEditing==false}

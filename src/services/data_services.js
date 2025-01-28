@@ -31,6 +31,7 @@ function createProjectSlot(name, month, year) {
 }
 
 export function setData(data) {
+  console.log("setting data: ", data);
   localStorage.setItem("data", JSON.stringify(data));
 }
 
@@ -52,6 +53,7 @@ export function setProject(project, projectName) {
   setData(data);
 }
 export function setProjectSlot(project) {
+  console.log("inside setProjectSlot and obtained : ", project);
   let slot = getDate(project.date.month, project.date.year);
   let data = getData();
   let projectName = project.project.name;
@@ -102,6 +104,7 @@ export function getProject(name) {
 }
 export function getProjectSlot(name, month, year) {
   let slot = getDate(month, year);
+
   let data = getData();
   if(!data[name][slot]) return null;
   data[name][slot]['project']={};
