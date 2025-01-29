@@ -40,7 +40,7 @@ export default function List(props) {
             </svg>
           </button>
           <input
-            className="w-[8.5vw] m-1 rounded"
+            className="w-[8vw] m-1 rounded p-1"
             value={inputText}
             onChange={(e) => {
               setInputText(e.target.value);

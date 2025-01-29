@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import setGlobalState from '../services/global_state';
 import EditableInput from '../components/EditableInput';
 import { useDispatch, useSelector } from 'react-redux';
+
 export default function ProjectList() {
     let [projects, setProjects] = useState(getProjects());
     let dispatch = useDispatch();

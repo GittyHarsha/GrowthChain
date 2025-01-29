@@ -30,11 +30,11 @@ function createProjectSlot(name, month, year) {
   return projectSlot;
 }
 
+
 export function setData(data) {
   console.log("setting data: ", data);
   localStorage.setItem("data", JSON.stringify(data));
 }
-
 export function getData() {
   let data = localStorage.getItem("data");
 
