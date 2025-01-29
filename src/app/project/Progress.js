@@ -15,7 +15,7 @@ export default function Progress(props) {
   let items = progress.map((item) => (
     <div key={item.day}>
       <h2 className="bg-white rounded font-bold font-sans">Day: {item.day}</h2>
-      <div dangerouslySetInnerHTML={{ __html: item.value }}></div>
+      <MDEditor.Markdown source={item.value} style={{ backgroundColor: "#ffffff", color: "#000000", padding: "10px", borderRadius: "5px" }} />
     </div>
   ));
 
