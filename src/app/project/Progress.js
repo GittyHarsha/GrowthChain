@@ -5,6 +5,7 @@ import { setProgress } from "../../redux/slices/progressSlice";
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import MDEditor from "@uiw/react-md-editor";
+import ExpandableCard from "../../components/ExpandableCard";
 
 export default function Progress(props) {
   let progress = useSelector((state) => state.progress.progress);
@@ -13,11 +14,23 @@ export default function Progress(props) {
   const editorRef = useRef(null);
 
   let items = progress.map((item) => (
-    <div key={item.day}>
-      <h2 className="bg-white rounded font-bold font-sans">Day: {item.day}</h2>
-      <MDEditor.Markdown source={item.value} style={{ backgroundColor: "#ffffff", color: "#000000", padding: "10px", borderRadius: "5px" }} />
-    </div>
+    <ExpandableCard
+      preview={<MDEditor.Markdown
+        source={item.value.slice(0,100)}
+
+        data-color-mode="light"
+        className="!bg-white !text-black break-words whitespace-pre-wrap"
+      />}
+      key={item.day} title={`Day: ${item.day}`}>
+      <MDEditor.Markdown
+        source={item.value}
+
+        data-color-mode="light"
+        className="!bg-white !text-black break-words whitespace-pre-wrap"
+      />
+    </ExpandableCard>
   ));
+
 
   let [dayProgress, setDayProgress] = useState(progress[progress.length - 1] || { day: dayjs().date(), value: "" });
 
@@ -30,37 +43,37 @@ export default function Progress(props) {
       if (prev.value === content) return prev;
       let day = dayjs().date();
       let progressObj = { day: day, value: content };
-      
+
       let dispatchProgress = [...progress];
       if (dispatchProgress.length > 0) {
         dispatchProgress[dispatchProgress.length - 1] = progressObj;
       } else {
         dispatchProgress.push(progressObj);
       }
-      
+
       _.debounce(() => {
         dispatch(setProgress({ progress: dispatchProgress }));
       }, 500)();
-      
+
       return progressObj;
     });
   }
 
   return (
     <div>
-      <List 
+      <List
         style={{ maxHeight: '70vh', overflowY: 'scroll' }}
         listPrepare={
-          <MDEditor 
+          <MDEditor
             ref={editorRef}
-            value={dayProgress.value} 
+            value={dayProgress.value}
             onChange={onChangeHandler}
             data-color-mode="light"
           />
         }
-        listName={"Progress"} 
-        viewOnly={true} 
-        items={items.slice(0, -1).reverse()} 
+        listName={"Progress"}
+        viewOnly={true}
+        items={items.slice(0, -1).reverse()}
       />
     </div>
   );

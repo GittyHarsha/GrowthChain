@@ -1,58 +1,84 @@
-import List from '../../components/List';
-import {useSelector, useDispatch} from 'react-redux';
-import GoalTypeModal from './GoalTypeModal';
-import {useState} from 'react';
-import {addGoal, deleteGoal, setGoals}from '../../redux/slices/goalsSlice';
-import GoalStatus from './GoalStatus';
-import updateScore from '../../services/update_score';
+import { useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import List from "../../components/List";
+import GoalTypePopover from "./GoalTypePopover";
+import { addGoal, deleteGoal, setGoals } from "../../redux/slices/goalsSlice";
+import GoalStatus from "./GoalStatus";
+import updateScore from "../../services/update_score";
+
 export default function DailyGoals(props) {
-    let dailyGoals = useSelector((state)=> state.goals.dailyGoals);
-    let [currentGoal, setCurrentGoal] = useState('');
-    let lastDate = useSelector((state)=> state.goals.lastDate);
-    let [isModalOpen, setIsModalOpen] = useState(false);
-    let dispatch = useDispatch();
-    let items = dailyGoals.map(
-        (goal, idx)=> (
-                <GoalStatus goal={goal} onChange={(goal)=> {handleGoalUpdate(goal, idx)}}/>
-        )
-    );
-    function handleGoalUpdate(goal, idx) {
-        let goals = [...dailyGoals];
-        updateScore(goals[idx], goal);
-        goals[idx]= goal;
+  const dailyGoals = useSelector((state) => state.goals.dailyGoals);
+  const dispatch = useDispatch();
 
-        dispatch(setGoals({goalType: 'dailyGoals', goals: goals}));
-    }
-    function handleAddItem(goal) {
-        setIsModalOpen(true);
-        setCurrentGoal(goal);
-    }
-    function onModalSubmit(goal) {
-        addItem(goal);
-        setIsModalOpen(false);
-    }
-    function addItem(item) {
-        dispatch(addGoal({goalType: 'dailyGoal', goal: item}));
-    }
-    function deleteItem(item) {
-        dispatch(deleteGoal({goalType: 'dailyGoal', index: item}));
-    }
-    
-    
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [currentGoal, setCurrentGoal] = useState("");
+  const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
 
-    return <>
-    <List
-    listName={"DailyGoals"}
-    viewOnly={false}
-    items={items}
-    addItem ={handleAddItem}
-    deleteItem ={deleteItem}
-    className={"bg-blue"}
+  // Ref for the input or + button to determine position
+  const addButtonRef = useRef(null);
+
+  // Convert dailyGoals to GoalStatus components
+  const items = dailyGoals.map((goal, idx) => (
+    <GoalStatus
+      key={idx}
+      goal={goal}
+      onChange={(updatedGoal) => handleGoalUpdate(updatedGoal, idx)}
     />
-    <GoalTypeModal
-    isOpen={isModalOpen}
-    onSubmit={onModalSubmit}
-    goal={currentGoal}
-    />
-    </> 
+  ));
+
+  function handleGoalUpdate(goal, idx) {
+    let goalsCopy = [...dailyGoals];
+    updateScore(goalsCopy[idx], goal);
+    goalsCopy[idx] = goal;
+    dispatch(setGoals({ goalType: "dailyGoals", goals: goalsCopy }));
+  }
+
+  // When user presses Enter or clicks "+", open the popover
+  function handleAddItem(text) {
+    if (addButtonRef.current) {
+      const rect = addButtonRef.current.getBoundingClientRect();
+      setPopoverPosition({
+        top: rect.bottom + window.scrollY + 5, // Position below button
+        left: rect.left + window.scrollX, // Align with button
+      });
+    }
+    setIsPopoverOpen(true);
+    setCurrentGoal(text);
+  }
+
+  // When popover form is submitted
+  function onPopoverSubmit(goalData) {
+    if (goalData) {
+      dispatch(addGoal({ goalType: "dailyGoal", goal: goalData }));
+    }
+    setIsPopoverOpen(false);
+  }
+
+  function deleteItem(idx) {
+    dispatch(deleteGoal({ goalType: "dailyGoal", index: idx }));
+  }
+
+  return (
+    <div className="relative">
+      {/* List component where user adds/removes goals */}
+      <List
+        listName="DailyGoals"
+        viewOnly={false}
+        items={items}
+        addItem={handleAddItem}
+        deleteItem={deleteItem}
+        className="bg-blue"
+        addButtonRef={addButtonRef} // Pass ref to position the popover
+      />
+
+      {/* Floating popover near the button/input */}
+      <GoalTypePopover
+        isOpen={isPopoverOpen}
+        top={popoverPosition.top} // Parent sets the position
+        left={popoverPosition.left}
+        onSubmit={onPopoverSubmit}
+        goal={currentGoal}
+      />
+    </div>
+  );
 }
