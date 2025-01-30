@@ -13,7 +13,6 @@ export default function Project() {
   const projectMonth = useSelector((state) => state.date.month);
   const projectYear = useSelector((state) => state.date.year);
 
-  // A helper function to update global state based on project slot:
   function update(name, month, year) {
     let projectSlot = getProjectSlot(name, month, year);
     if (!projectSlot) {
@@ -51,12 +50,10 @@ export default function Project() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col gap-4 p-4">
-      {/* Project Header and Month-Year Selector */}
-      <div className="flex justify-between items-center rounded bg-gray-100 p-4 shadow-md">
-        <h1 className="text-3xl font-bold text-black-100">
-          {projectName}
-        </h1>
+    <div className="w-full h-full flex flex-col gap-6 p-6">
+      {/* Header: Project Name + Date Selector */}
+      <div className="flex justify-between items-center bg-gray-100 p-5 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-black">{projectName}</h1>
         <DateDropdown
           month={projectMonth}
           year={projectYear}
@@ -65,25 +62,25 @@ export default function Project() {
         />
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Left Column */}
-        <div className="flex flex-col gap-4">
-          <div className="bg-gray-100 p-4 rounded shadow-md">
+      {/* Responsive Asymmetric Layout */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Column: Daily & Monthly Goals (Smaller) */}
+        <div className="md:w-1/3 flex flex-col gap-6">
+          <div className="bg-gray-100 p-5 rounded-lg shadow-lg">
             <DailyGoals />
           </div>
-          <div className="bg-gray-100 p-4 rounded shadow-md">
+          <div className="bg-gray-100 p-5 rounded-lg shadow-lg">
             <MonthlyGoals />
           </div>
         </div>
 
-        {/* Middle Column */}
-        <div className="bg-gray-100 p-4 rounded shadow-md">
+        {/* Center Column: **Progress (Wider for More Space)** */}
+        <div className="md:w-2/3 bg-gray-100 p-6 rounded-lg shadow-lg">
           <Progress />
         </div>
 
-        {/* Right Column */}
-        <div className="bg-gray-100 p-4 rounded shadow-md">
+        {/* Right Column: End Goals (Smaller) */}
+        <div className="md:w-1/4 bg-gray-100 p-5 rounded-lg shadow-lg">
           <EndGoals />
         </div>
       </div>

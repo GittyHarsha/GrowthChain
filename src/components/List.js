@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function List(props) {
   const {
@@ -7,13 +7,18 @@ export default function List(props) {
     onClickFunc = () => {},
     addItem = () => {},
     deleteItem = () => {},
-    listName = "",
+    listName = '',
     listPrepare,
     style = {},
   } = props;
 
-  const [hoverIndex, setHoverIndex] = useState(-1);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+
+  // Toggle dropdown state
+  const handleToggleDropdown = (idx) => {
+    setOpenDropdownIndex((prev) => (prev === idx ? null : idx));
+  };
 
   return (
     <div className="m-2 p-3 rounded-lg shadow-md bg-yellow-400 border-b border-white text-black">
@@ -34,9 +39,9 @@ export default function List(props) {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && inputText.trim()) {
+                if (e.key === 'Enter' && inputText.trim()) {
                   addItem(inputText.trim());
-                  setInputText("");
+                  setInputText('');
                 }
               }}
             />
@@ -44,7 +49,7 @@ export default function List(props) {
             {inputText.length > 0 && (
               <button
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
-                onClick={() => setInputText("")}
+                onClick={() => setInputText('')}
               >
                 X
               </button>
@@ -57,7 +62,7 @@ export default function List(props) {
             onClick={() => {
               if (inputText.trim()) {
                 addItem(inputText.trim());
-                setInputText("");
+                setInputText('');
               }
             }}
           >
@@ -67,7 +72,7 @@ export default function List(props) {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5"
             >
               <path
                 strokeLinecap="round"
@@ -80,43 +85,62 @@ export default function List(props) {
       )}
 
       {/* List Items */}
-      <ul style={{...style}}>
+      <ul style={{ ...style }}>
         {items.map((item, idx) => (
           <li
             key={idx}
-            className="flex items-center justify-between my-2 p-3 bg-yellow-100 rounded-lg shadow-md transition duration-300"
-            onMouseEnter={() => setHoverIndex(idx)}
-            onMouseLeave={() => setHoverIndex(-1)}
+            className="relative flex items-center justify-between my-2 p-2 bg-yellow-100 rounded-lg shadow-md"
           >
             {/* Clickable text area */}
-            <div
-              className="cursor-pointer flex-grow"
-              onClick={() => onClickFunc(idx)}
-            >
+            <div className="cursor-pointer flex-grow" onClick={() => onClickFunc(idx)}>
               {item}
             </div>
 
-            {/* Delete button (only if not viewOnly and hovered) */}
-            {!viewOnly && hoverIndex === idx && (
-              <button
-                className="ml-2 text-black hover:text-red-600"
-                onClick={() => deleteItem(idx)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
+            {/* Kebab Menu Button (only if not viewOnly) */}
+            {!viewOnly && (
+              <div className="ml-2">
+                <button
+                  onClick={() => handleToggleDropdown(idx)}
+                  className="p-2 rounded hover:bg-yellow-200"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                  />
-                </svg>
-              </button>
+                  {/* Three-dots Icon (Kebab Icon) */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 10 30"
+                  >
+                    <circle cx="5" cy="4" r="2" />
+                    <circle cx="5" cy="14" r="2" />
+                    <circle cx="5" cy="24" r="2" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {openDropdownIndex === idx && (
+                  <div className="absolute right-1 top-12 bg-white shadow-md rounded z-10 w-24">
+                    <ul className="flex flex-col text-black">
+                      <li
+                        className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                          // Optional confirm:
+                          // if (window.confirm('Are you sure you want to delete this item?')) {
+                          deleteItem(idx);
+                          // }
+                          setOpenDropdownIndex(null);
+                        }}
+                      >
+                        Delete
+                      </li>
+
+                      {/* Add more menu items if needed */}
+                      {/* <li className="px-3 py-2 hover:bg-gray-200 cursor-pointer">
+                        Something else
+                      </li> */}
+                    </ul>
+                  </div>
+                )}
+              </div>
             )}
           </li>
         ))}
